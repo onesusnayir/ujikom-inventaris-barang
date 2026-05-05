@@ -10,13 +10,26 @@ const Dashboard = () => {
     fetch('http://localhost:3000/api/barang').then(res => res.json()).then(data => setBarang(data));
   }, []);
 
+  
+  const handleDelete = async (barangId) => {
+    await fetch(`http://localhost:3000/api/barang/${barangId}`, {
+      method: 'DELETE',
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json"
+      },
+    })
+
+    fetch('http://localhost:3000/api/barang').then(res => res.json()).then(data => setBarang(data));
+  }
+
   return (
     <div className="p-8 bg-gray-50 min-h-screen font-sans">
       <Header />
 
       {
         barang &&
-        <Table barang={barang}/>
+        <Table barang={barang} handleDelete={handleDelete}/>
       }
     </div>
   );

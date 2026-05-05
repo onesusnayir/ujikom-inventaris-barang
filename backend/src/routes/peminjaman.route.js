@@ -3,10 +3,12 @@ const router = express.Router();
 
 const Peminjaman = require("../models/peminjaman.model");
 const Barang = require("../models/barang.model");
+const createLog = require('../controllers/logging.controller')
 
 router.post("/", async (req, res) => {
     try {
-        const { userId, barangId } = req.body;
+        const { barangId } = req.body;
+        const userId = req.cookies.userId
 
         const barang = await Barang.findById(barangId);
 
@@ -26,6 +28,12 @@ router.post("/", async (req, res) => {
             userId,
             barangId
         });
+
+        await createLog(
+            userId,
+            "MEMINJAM",
+            `Mengajukan peminjaman barang ${barang.nama_barang}`
+        );
 
         await peminjaman.save();
 
@@ -56,9 +64,26 @@ router.get("/", async (req, res) => {
     }
 });
 
+router.get("/me", async (req, res) => {
+    try {
+        const userId = req.cookies.userId
+
+        const data = await Peminjaman.find({ userId: userId})
+            .populate("userId", "nama email")
+            .populate("barangId", "nama_barang");
+
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+});
+
 router.put("/approve/:id", async (req, res) => {
     try {
-        const peminjaman = await Peminjaman.findById(req.params.id);
+        const userId = req.cookies.userId
+        const peminjaman = await Peminjaman.findById(req.params.id).populate("barangId");;
 
         if (!peminjaman) {
             return res.status(404).json({
@@ -74,6 +99,12 @@ router.put("/approve/:id", async (req, res) => {
             { status: "dipinjam" }
         );
 
+        await createLog(
+            userId,
+            "APPROVE",
+            `Menyetujui peminjaman ${peminjaman.barangId.nama_barang}`
+        );
+
         res.json({
             message: "Peminjaman disetujui"
         });
@@ -87,9 +118,16 @@ router.put("/approve/:id", async (req, res) => {
 
 router.put("/tolak/:id", async (req, res) => {
     try {
-        await Peminjaman.findByIdAndUpdate(
+        const userId = req.cookies.userId
+        const peminjaman = await Peminjaman.findByIdAndUpdate(
             req.params.id,
             { status: "ditolak" }
+        ).populate("barangId");
+
+         await createLog(
+            userId,
+            "TOLAK",
+            `Menolak peminjaman ${peminjaman.barangId.nama_barang}`
         );
 
         res.json({
@@ -104,7 +142,6 @@ router.put("/tolak/:id", async (req, res) => {
 });
 
 
-// PENGEMBALIAN
 router.put("/return/:id", async (req, res) => {
     try {
         const peminjaman = await Peminjaman.findById(req.params.id);
@@ -123,6 +160,12 @@ router.put("/return/:id", async (req, res) => {
         await Barang.findByIdAndUpdate(
             peminjaman.barangId,
             { status: "tersedia" }
+        );
+
+        await createLog(
+            userId,
+            "KEMBALI",
+            `Mengembalikan ${peminjaman.barangId.nama_barang}`
         );
 
         res.json({

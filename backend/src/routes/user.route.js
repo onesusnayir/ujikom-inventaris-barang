@@ -7,7 +7,6 @@ router.post("/login", async (req, res) => {
         const { email, password } = req.body;
 
         const user = await User.findOne({ email });
-        console.log(email, password)
 
         if (!user) {
             return res.status(404).json({
@@ -20,6 +19,10 @@ router.post("/login", async (req, res) => {
                 message: "Password salah"
             });
         }
+          res.cookie("userId", user.id, {
+            maxAge: 24 * 60 * 60 * 100,
+            httpOnly: true
+        });
 
         res.status(200).json({
             message: "Login berhasil",
@@ -71,5 +74,42 @@ router.post("/register", async (req, res) => {
     }
 });
 
+router.get('/check-auth', async (req, res) => {
+    try{
+        const userId = req.cookies.userId;
+        
+        if (!userId) {
+            return res.status(401).json({
+                loggedIn: false,
+                message: "Belum login"
+            });
+        }
 
+        const user = await User.findById(userId);
+    
+        return res.status(200).json({
+            loggedIn: true,
+            user
+        });
+    
+    }catch(error){
+        res.status(500).json({
+            message: error.message
+        });
+    }
+});
+
+router.post('/logout', async (req, res) => {
+    try{
+    res.cookie("userId", "", {
+        maxAge: 0,
+        });
+    res.status(200).json({ message: "Logout successfully" });
+    
+    }catch(error){
+        res.status(500).json({
+            message: error.message
+        });
+    }
+});
 module.exports = router;

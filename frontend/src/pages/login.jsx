@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../store/useAuthStore';
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -9,10 +10,11 @@ const LoginForm = () => {
     password: ''
   });
 
+  const { login } = useAuthStore()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    login(formData)
+    login(formData.email, formData.password)
   };
 
   return (
@@ -72,7 +74,4 @@ const LoginForm = () => {
   );
 };
 
-const login = () => {
-  
-}
 export default LoginForm;
