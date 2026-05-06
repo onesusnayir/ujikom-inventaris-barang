@@ -16,7 +16,7 @@ const App = () => {
   }, [checkLogin])
 
 
-  if (!user && isChecking) {
+  if (isChecking) {
   return (
     <div className="h-screen flex items-center justify-center">
       Loading...
@@ -28,9 +28,9 @@ const App = () => {
       <Navbar />
       <Routes>
         <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to={'/login'}/>}/>
-        <Route path="/peminjaman" element={user ? <Peminjaman /> : <Navigate to={'/login'}/>}/>
-        <Route path="/kelola-peminjaman" element={user ? <KelolaPeminjaman /> : <Navigate to={'/login'}/>}/>
-        <Route path="/log" element={<Log />}/>
+        <Route path="/peminjaman" element={user && user.role === 'staf' ? <Peminjaman /> : <Navigate to={'/login'}/>}/>
+        <Route path="/kelola-peminjaman" element={user && user.role === 'petugas' ? <KelolaPeminjaman /> : <Navigate to={'/login'}/>}/>
+        <Route path="/log" element={user && user.role === 'admin' ? <Log /> : <Navigate to={'/login'} />}/>
         <Route path="/login" element={!user ? <LoginForm /> : <Navigate to={'/dashboard'}/>}/>
       </Routes>
     </div>

@@ -42,7 +42,7 @@ const Report = ({ logs }) => {
   return (
     <button
       onClick={generatePDF}
-      className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+      className="bg-blue-600 mb-5 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition h-fit mt-auto"
     >
       Download Report
     </button>

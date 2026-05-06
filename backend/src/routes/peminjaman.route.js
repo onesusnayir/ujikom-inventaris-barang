@@ -18,12 +18,6 @@ router.post("/", async (req, res) => {
             });
         }
 
-        if (barang.status !== "tersedia") {
-            return res.status(400).json({
-                message: "Barang tidak tersedia"
-            });
-        }
-
         const peminjaman = new Peminjaman({
             userId,
             barangId
@@ -94,11 +88,6 @@ router.put("/approve/:id", async (req, res) => {
         peminjaman.status = "disetujui";
         await peminjaman.save();
 
-        await Barang.findByIdAndUpdate(
-            peminjaman.barangId,
-            { status: "dipinjam" }
-        );
-
         await createLog(
             userId,
             "APPROVE",
@@ -156,11 +145,6 @@ router.put("/return/:id", async (req, res) => {
         peminjaman.tanggalKembali = new Date();
 
         await peminjaman.save();
-
-        await Barang.findByIdAndUpdate(
-            peminjaman.barangId,
-            { status: "tersedia" }
-        );
 
         await createLog(
             userId,

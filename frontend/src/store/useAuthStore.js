@@ -4,7 +4,7 @@ const API_URL = "http://localhost:3000/api";
 
 export const useAuthStore = create((set) => ({
     user: null,
-    isChecking: false,
+    isChecking: true,
 
     login: async (email, password) => {
         try {

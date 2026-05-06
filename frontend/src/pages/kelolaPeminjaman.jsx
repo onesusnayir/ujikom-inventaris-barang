@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Table from "../components/kelolaPeminjaman/table";
+import Header from "../components/kelolaPeminjaman/header";
 
 const KelolaPeminjaman = () => {
     const [barang, setBarang] = useState([])
@@ -11,9 +12,10 @@ const KelolaPeminjaman = () => {
     }, [])
 
     return (
-        <>
+        <div className="p-8 bg-gray-50 min-h-screen font-sans">
+            <Header />
             <Table barang={barang}/>
-        </>
+        </div>
     )
 }
 

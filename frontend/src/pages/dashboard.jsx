@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, Package, AlertCircle, RefreshCcw } from 'lucide-react';
 import Table from '../components/dashboard/table';
 import Header from '../components/dashboard/header';
+import AddBarang from '../components/dashboard/addBarang';
+import { useAuthStore } from '../store/useAuthStore';
 
 const Dashboard = () => {
   const [barang, setBarang] = useState([]);
@@ -23,9 +25,18 @@ const Dashboard = () => {
     fetch('http://localhost:3000/api/barang').then(res => res.json()).then(data => setBarang(data));
   }
 
+  const { user } = useAuthStore()
+
   return (
     <div className="p-8 bg-gray-50 min-h-screen font-sans">
-      <Header />
+      <div className='flex justify-between items-center'>
+         <Header />
+         {
+          (user.role === 'petugas' || user.role === 'admin') && 
+           <AddBarang setBarang={setBarang}/>
+
+         }
+      </div>
 
       {
         barang &&

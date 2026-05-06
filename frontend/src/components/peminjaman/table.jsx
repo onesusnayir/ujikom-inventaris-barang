@@ -3,31 +3,28 @@ import { useAuthStore } from "../../store/useAuthStore";
 
 const Table = ({ barang }) => {
   const { user } = useAuthStore()
-  console.log(barang)
-    return(<div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+
+return(<div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left">
                 <thead>
-                  <tr className="bg-gray-50/50 border-b border-gray-100">
+                  <tr className="bg-gray-50/50 border-b border-gray-100 text-center">
                     <th className="px-6 py-4 text-xs uppercase tracking-wider font-bold text-gray-500">Informasi Barang</th>
                     <th className="px-6 py-4 text-xs uppercase tracking-wider font-bold text-gray-500">Status</th>
                     <th className="px-6 py-4 text-xs uppercase tracking-wider font-bold text-gray-500">Tanggal Pengajuan</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-50">
+                <tbody className="divide-y divide-gray-50 text-center">
                   {barang.map((item) => (
                     <tr key={item._id} className="hover:bg-gray-50/80 transition-colors">
                       <td className="px-6 py-4">
                         <div className="font-semibold text-gray-800">{item.barangId.nama_barang}</div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-2">
-                          <span className={`h-2 w-2 rounded-full }`}></span>
-                          <span className="text-sm font-medium text-gray-700 capitalize">{item.status}</span>
-                        </div>
+                          <span className="text-sm font-medium text-gray-700 capitalize text-center">{item.status}</span>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="font-semibold text-gray-800">{item.createdAt}</div>
+                        <div className="font-semibold text-gray-800">{item.createdAt.split('T')[0]}</div>
                       </td>
                     </tr>
                   ))}

@@ -11,10 +11,12 @@ const Navbar = () => {
     }
 
     return (
-<div className="bg-white shadow-md px-8 py-4 flex justify-between items-center">
-    <h1 className="text-2xl font-bold text-blue-600">
-        Sistem Informasi Inventaris
-    </h1>
+<div className="bg-white shadow-md px-8 py-6 flex justify-between items-center">
+    <Link to={'/dashboard'}>
+        <h1 className="text-2xl font-bold text-blue-600">
+            Sistem Informasi Inventaris
+        </h1>
+    </Link>
 
     {user && (
         <ul className="flex gap-6 items-center">
@@ -53,8 +55,8 @@ const Navbar = () => {
                     </Link>
                 </li>
             }
-            <li>
-                <button onClick={handleLogout}>Logout</button>
+            <li className="px-4 py-2 hover:bg-red-500 hover:text-white rounded cursor-pointer">
+                <button className="cursor-pointer" onClick={handleLogout}>Logout</button>
             </li>
         </ul>
     )}

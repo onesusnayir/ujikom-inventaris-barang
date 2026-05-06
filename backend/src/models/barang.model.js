@@ -22,12 +22,6 @@ const barangSchema = new mongoose.Schema({
         default: "baik"
     },
 
-    status: {
-        type: String,
-        enum: ["tersedia", "dipinjam", "rusak"],
-        default: "tersedia"
-    },
-
     lokasi: {
         type: String
     }
